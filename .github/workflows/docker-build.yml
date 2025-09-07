@@ -18,6 +18,7 @@ jobs:
         build:
           # Undeclared release tag finds latest from GitHub tags
           - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.7.1", cuda: "12.9.1-base"}
+          - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.7.1", cuda: "13.0.0-base"}
           - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.8.0", cuda: "13.0.0-base"}
           
     steps:
