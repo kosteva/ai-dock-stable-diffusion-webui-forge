@@ -14,7 +14,8 @@ build_nvidia_install_deps() {
         torchvision \
         torchaudio \
         --extra-index-url=https://download.pytorch.org/whl/$short_cuda_version
-    "$FORGE_VENV_PIP" install --no-cache-dir git+https://github.com/facebookresearch/xformers.git
+    set TORCH_CUDA_ARCH_LIST=12.0
+    "$FORGE_VENV_PIP" install --no-cache-dir git+https://github.com/LagPixelLOL/xformers.git@blackwell
 }
 
 build_nvidia_run_tests() {
