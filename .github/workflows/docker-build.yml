@@ -17,7 +17,11 @@ jobs:
       matrix:
         build:
           # Undeclared release tag finds latest from GitHub tags
-          - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.8.0", cuda: "12.9.1-base"}
+          - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.8.0", cuda: "13.0.0-base"}
+          - {latest: "false", forge: "dfdcbab", python: "3.11", pytorch: "2.8.0", cuda: "13.0.0-base"}
+          - {latest: "false", forge: "dfdcbab", python: "3.12", pytorch: "2.8.0", cuda: "13.0.0-base"}
+          - {latest: "false", forge: "dfdcbab", python: "3.13", pytorch: "2.8.0", cuda: "13.0.0-base"}
+          - {latest: "false", forge: "dfdcbab", python: "3.14", pytorch: "2.8.0", cuda: "13.0.0-base"}
           # - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.7.1", cuda: "13.0.0-base"}
           # - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.8.0", cuda: "13.0.0-base"}
           
@@ -66,7 +70,7 @@ jobs:
             [ -z "$FORGE_BUILD_REF" ] && { echo "Error: FORGE_BUILD_REF is empty. Exiting script." >&2; exit 1; }
             echo "FORGE_BUILD_REF=${FORGE_BUILD_REF}" >> ${GITHUB_ENV}
 
-            base_tag="v2-cuda-${{ matrix.build.cuda }}-${{ env.UBUNTU_VERSION }}"
+            base_tag="v2-cuda-${{ matrix.build.cuda }}-python-${{ matrix.build.python }}-${{ env.UBUNTU_VERSION }}"
 
             if [[ ${{ matrix.build.latest }} == "true" ]]; then
                 echo "Marking latest"
