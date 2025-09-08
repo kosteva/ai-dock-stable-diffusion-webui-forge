@@ -13,10 +13,12 @@ build_nvidia_install_deps() {
         torch==${PYTORCH_VERSION} \
         torchvision \
         torchaudio \
+        cmake \
+        ninja \
         --extra-index-url=https://download.pytorch.org/whl/$short_cuda_version
     set FORCE_CUDA=1
-    set TORCH_CUDA_ARCH_LIST=12.0
-    "$FORGE_VENV_PIP" install --no-cache-dir git+https://github.com/LagPixelLOL/xformers.git@blackwell
+    set TORCH_CUDA_ARCH_LIST=12.0+PTX
+    "$FORGE_VENV_PIP" install --no-binary --no-cache-dir --force-reinstall git+https://github.com/LagPixelLOL/xformers.git@blackwell
 }
 
 build_nvidia_run_tests() {
