@@ -1,0 +1,99 @@
+name: Docker Build
+
+on:
+  workflow_dispatch:
+  #push:
+  #  branches: [ "main" ]
+    
+env:
+  UBUNTU_VERSION: 22.04
+  BUILDX_NO_DEFAULT_ATTESTATIONS: 1
+
+jobs:
+  nvidia-base:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        latest:
+          - false
+        forge:
+          - dfdcbab
+        python:
+          - "3.10"
+          - 3.11
+        pytorch:
+          - 2.7.1
+        cuda:
+          - 13.0.0-base
+          - 12.9.1-base
+          - 12.8.1-base
+          
+    steps:
+      -
+        name: Free Space
+        run: |
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
+      -
+        name: Env Setter
+        run: |
+          REPO=${GITHUB_REPOSITORY,,}
+          echo "REPO_NAMESPACE=${REPO%%/*}" >> ${GITHUB_ENV}
+          echo "REPO_NAME=${REPO#*/}" >> ${GITHUB_ENV}
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Permissions fixes
+        run: |
+          target="${HOME}/work/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}/build/COPY*"
+          chmod -R ug+rwX ${target}
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Set tags
+        run: |
+          img_path_ghcr="ghcr.io/${{ env.REPO_NAMESPACE }}/${{ env.REPO_NAME }}"
+          if [[ -z '${{ matrix.forge }}' ]]; then
+                FORGE_BUILD_REF="$(curl -s https://api.github.com/repos/lllyasviel/stable-diffusion-webui-forge/tags | jq -r '.[0].name')"
+            else
+                FORGE_BUILD_REF="${{ matrix.forge }}"
+            fi
+            [ -z "$FORGE_BUILD_REF" ] && { echo "Error: FORGE_BUILD_REF is empty. Exiting script." >&2; exit 1; }
+            echo "FORGE_BUILD_REF=${FORGE_BUILD_REF}" >> ${GITHUB_ENV}
+
+            base_tag="${{ matrix.python }}-v2-cuda-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}"
+
+            if [[ ${{ matrix.latest }} == "true" ]]; then
+                echo "Marking latest"
+                # GHCR.io Tags
+                TAGS="${img_path_ghcr}:${base_tag}-${FORGE_BUILD_REF}, ${img_path_ghcr}:${base_tag}, ${img_path_ghcr}:latest, ${img_path_ghcr}:latest-cuda"
+            else
+                TAGS="${img_path_ghcr}:${base_tag}-${FORGE_BUILD_REF}"
+            fi
+          echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: build
+          build-args: |
+            IMAGE_BASE=ghcr.io/kosteva/ai-dock-python:${{ matrix.python }}-v2-cuda-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}
+            PYTHON_VERSION=${{ matrix.python }}
+            PYTORCH_VERSION=${{ matrix.pytorch }}
+            FORGE_BUILD_REF=${{ env.FORGE_BUILD_REF }}
+          push: true
+          provenance: false
+          tags: ${{ env.TAGS }}
