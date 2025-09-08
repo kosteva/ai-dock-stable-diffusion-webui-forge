@@ -9,12 +9,13 @@ build_nvidia_main() {
 build_nvidia_install_deps() {
     short_cuda_version="cu$(cut -d '.' -f 1,2 <<< "${CUDA_VERSION}" | tr -d '.')"
     "$FORGE_VENV_PIP" install --no-cache-dir \
+        cmake \
+        ninja
+    "$FORGE_VENV_PIP" install --no-cache-dir \
         nvidia-ml-py3 \
         torch==${PYTORCH_VERSION} \
         torchvision \
         torchaudio \
-        cmake \
-        ninja \
         --extra-index-url=https://download.pytorch.org/whl/$short_cuda_version
     export FORCE_CUDA=1
     export TORCH_CUDA_ARCH_LIST="12.0+PTX"
