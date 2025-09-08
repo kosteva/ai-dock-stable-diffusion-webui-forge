@@ -20,14 +20,15 @@ jobs:
         forge:
           - dfdcbab
         python:
-          - "3.10"
+          # - "3.10"
           - 3.11
         pytorch:
-          - 2.7.1
+          # - 2.7.1
+          - 2.8.0
         cuda:
           - 13.0.0-base
-          - 12.9.1-base
-          - 12.8.1-base
+          # - 12.9.1-base
+          # - 12.8.1-base
           
     steps:
       -
