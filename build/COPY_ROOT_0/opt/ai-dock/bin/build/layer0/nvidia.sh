@@ -19,7 +19,8 @@ build_nvidia_install_deps() {
         --extra-index-url=https://download.pytorch.org/whl/$short_cuda_version
     export FORCE_CUDA=1
     export TORCH_CUDA_ARCH_LIST="12.0+PTX"
-    $FORGE_VENV_PIP install --no-binary xformers --no-cache-dir --force-reinstall -v git+https://github.com/LagPixelLOL/xformers.git@blackwell
+    # $FORGE_VENV_PIP install --no-binary xformers --no-cache-dir --force-reinstall -v git+https://github.com/LagPixelLOL/xformers.git@blackwell
+    $FORGE_VENV_PIP install -U xformers --index-url https://download.pytorch.org/whl/cu128
 }
 
 build_nvidia_run_tests() {
