@@ -15,15 +15,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build:
-          # Undeclared release tag finds latest from GitHub tags
-          - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.7.1", cuda: "13.0.0-base"}
-          - {latest: "false", forge: "dfdcbab", python: "3.11", pytorch: "2.7.1", cuda: "13.0.0-base"}
-          # - {latest: "false", forge: "dfdcbab", python: "3.12", pytorch: "2.8.0", cuda: "13.0.0-base"}
-          # - {latest: "false", forge: "dfdcbab", python: "3.13", pytorch: "2.8.0", cuda: "13.0.0-base"}
-          # - {latest: "false", forge: "dfdcbab", python: "3.14", pytorch: "2.8.0", cuda: "13.0.0-base"}
-          # - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.7.1", cuda: "13.0.0-base"}
-          # - {latest: "false", forge: "dfdcbab", python: "3.10", pytorch: "2.8.0", cuda: "13.0.0-base"}
+        latest:
+          - false
+        forge:
+          - dfdcbab
+        python:
+          - "3.10"
+          - 3.11
+        pytorch:
+          # - 2.7.1
+          - 2.8.0
+        cuda:
+          # - 13.0.0-base
+          # - 12.9.1-base
+          - 12.8.1-base
           
     steps:
       -
@@ -62,17 +67,17 @@ jobs:
         name: Set tags
         run: |
           img_path_ghcr="ghcr.io/${{ env.REPO_NAMESPACE }}/${{ env.REPO_NAME }}"
-          if [[ -z '${{ matrix.build.forge }}' ]]; then
+          if [[ -z '${{ matrix.forge }}' ]]; then
                 FORGE_BUILD_REF="$(curl -s https://api.github.com/repos/lllyasviel/stable-diffusion-webui-forge/tags | jq -r '.[0].name')"
             else
-                FORGE_BUILD_REF="${{ matrix.build.forge }}"
+                FORGE_BUILD_REF="${{ matrix.forge }}"
             fi
             [ -z "$FORGE_BUILD_REF" ] && { echo "Error: FORGE_BUILD_REF is empty. Exiting script." >&2; exit 1; }
             echo "FORGE_BUILD_REF=${FORGE_BUILD_REF}" >> ${GITHUB_ENV}
 
-            base_tag="${{ matrix.build.python }}-v2-cuda-${{ matrix.build.cuda }}-${{ env.UBUNTU_VERSION }}"
+            base_tag="${{ matrix.python }}-v2-cuda-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}"
 
-            if [[ ${{ matrix.build.latest }} == "true" ]]; then
+            if [[ ${{ matrix.latest }} == "true" ]]; then
                 echo "Marking latest"
                 # GHCR.io Tags
                 TAGS="${img_path_ghcr}:${base_tag}-${FORGE_BUILD_REF}, ${img_path_ghcr}:${base_tag}, ${img_path_ghcr}:latest, ${img_path_ghcr}:latest-cuda"
@@ -86,9 +91,9 @@ jobs:
         with:
           context: build
           build-args: |
-            IMAGE_BASE=ghcr.io/kosteva/ai-dock-python:${{ matrix.build.python }}-v2-cuda-${{ matrix.build.cuda }}-${{ env.UBUNTU_VERSION }}
-            PYTHON_VERSION=${{ matrix.build.python }}
-            PYTORCH_VERSION=${{ matrix.build.pytorch }}
+            IMAGE_BASE=ghcr.io/kosteva/ai-dock-python:${{ matrix.python }}-v2-cuda-${{ matrix.cuda }}-${{ env.UBUNTU_VERSION }}
+            PYTHON_VERSION=${{ matrix.python }}
+            PYTORCH_VERSION=${{ matrix.pytorch }}
             FORGE_BUILD_REF=${{ env.FORGE_BUILD_REF }}
           push: true
           provenance: false
