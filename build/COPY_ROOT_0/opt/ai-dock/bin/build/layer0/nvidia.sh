@@ -16,9 +16,9 @@ build_nvidia_install_deps() {
         cmake \
         ninja \
         --extra-index-url=https://download.pytorch.org/whl/$short_cuda_version
-    set FORCE_CUDA=1
-    set TORCH_CUDA_ARCH_LIST=12.0+PTX
-    "$FORGE_VENV_PIP" install --no-binary --no-cache-dir --force-reinstall git+https://github.com/LagPixelLOL/xformers.git@blackwell
+    export FORCE_CUDA=1
+    export TORCH_CUDA_ARCH_LIST="12.0+PTX"
+    $FORGE_VENV_PIP install --no-binary xformers --no-cache-dir --force-reinstall -v git+https://github.com/LagPixelLOL/xformers.git@blackwell
 }
 
 build_nvidia_run_tests() {
