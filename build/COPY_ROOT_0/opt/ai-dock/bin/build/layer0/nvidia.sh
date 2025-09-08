@@ -7,6 +7,9 @@ build_nvidia_main() {
 }
 
 build_nvidia_install_deps() {
+    $APT_INSTALL \
+        nvidia-cuda-dev
+        
     short_cuda_version="cu$(cut -d '.' -f 1,2 <<< "${CUDA_VERSION}" | tr -d '.')"
     "$FORGE_VENV_PIP" install --no-cache-dir \
         cmake \
