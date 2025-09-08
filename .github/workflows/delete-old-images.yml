@@ -32,7 +32,7 @@ jobs:
       -
         run: |
           echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-          echo "OWNER=orgs/${GITHUB_REPOSITORY_OWNER,,}" >> ${GITHUB_ENV}
+          echo "OWNER=users/${GITHUB_REPOSITORY_OWNER,,}" >> ${GITHUB_ENV}
       -
         uses: actions/github-script@v6
         with:
