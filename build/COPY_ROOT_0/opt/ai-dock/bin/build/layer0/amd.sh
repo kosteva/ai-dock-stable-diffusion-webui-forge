@@ -6,7 +6,7 @@ build_amd_main() {
 }
 
 build_amd_install_deps() {
-    "$FORGE_VENV_PIP" install \
+    "$FORGE_VENV_PIP" install --no-cache-dir \
         torch==${PYTORCH_VERSION} \
         torchvision \
         torchaudio \

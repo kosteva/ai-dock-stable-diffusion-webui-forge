@@ -28,4 +28,4 @@ git fetch --tags
 git checkout ${ref}
 git pull
 
-"$FORGE_VENV_PIP" install -r requirements.txt
+"$FORGE_VENV_PIP" install --no-cache-dir -r requirements.txt

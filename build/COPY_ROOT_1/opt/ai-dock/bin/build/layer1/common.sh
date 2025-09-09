@@ -20,7 +20,7 @@ build_common_install_forge() {
     cd /opt/stable-diffusion-webui-forge
     git checkout "$FORGE_BUILD_REF"
     
-    "$FORGE_VENV_PIP" install -r requirements_versions.txt
+    "$FORGE_VENV_PIP" install --no-cache-dir -r requirements_versions.txt
 }
 
 build_common_run_tests() {

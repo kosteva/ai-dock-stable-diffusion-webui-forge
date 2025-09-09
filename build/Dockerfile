@@ -29,8 +29,6 @@ FROM ${IMAGE_BASE}
 # get the python cache
 COPY --from=builder /root/.cache/pip /root/.cache/pip 
 
-RUN pip cache info
-
 LABEL org.opencontainers.image.source https://github.com/ai-dock/stable-diffusion-webui-forge
 LABEL org.opencontainers.image.description "Stable Diffusion Web UI Forge docker images for use in GPU cloud and local environments. Includes AI-Dock base for authentication and improved user experience."
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"

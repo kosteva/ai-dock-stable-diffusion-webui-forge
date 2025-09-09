@@ -14,7 +14,7 @@ build_common_create_venv() {
         "python${PYTHON_VERSION}-venv"
     
     "python${PYTHON_VERSION}" -m venv "$FORGE_VENV"
-    "$FORGE_VENV_PIP" install \
+    "$FORGE_VENV_PIP" install --no-cache-dir \
         ipykernel \
         ipywidgets
     "$FORGE_VENV_PYTHON" -m ipykernel install \
