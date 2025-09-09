@@ -77,7 +77,7 @@ jobs:
             [ -z "$FORGE_BUILD_REF" ] && { echo "Error: FORGE_BUILD_REF is empty. Exiting script." >&2; exit 1; }
             echo "FORGE_BUILD_REF=${FORGE_BUILD_REF}" >> ${GITHUB_ENV}
 
-            base_tag="${{ matrix.python }}-v2-cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}"
+            base_tag="${{ matrix.python }}-dev-cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}"
 
             if [[ ${{ matrix.latest }} == "true" ]]; then
                 echo "Marking latest"
