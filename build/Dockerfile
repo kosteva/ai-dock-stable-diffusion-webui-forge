@@ -2,7 +2,9 @@
 # Use a *cuda*base* image as default because pytorch brings the libs
 
 ARG DEV_IMAGE_BASE="ghcr.io/ai-dock/python:3.10-v2-cuda-12.1.1-devel-22.04"
-FROM ${DEV_IMAGE_BASE} as builder
+ARG IMAGE_BASE="ghcr.io/ai-dock/python:3.10-v2-cuda-12.1.1-base-22.04"
+
+FROM ${DEV_IMAGE_BASE} AS builder
 
 ENV FORGE_VENV=$VENV_DIR/forge
 ENV FORGE_VENV_PYTHON=$FORGE_VENV/bin/python
@@ -22,7 +24,6 @@ RUN set -eo pipefail && /opt/ai-dock/bin/build/layer0/init.sh | tee /var/log/bui
 
 # main build here
 
-ARG IMAGE_BASE="ghcr.io/ai-dock/python:3.10-v2-cuda-12.1.1-base-22.04"
 FROM ${IMAGE_BASE}
 
 # get the python cache
