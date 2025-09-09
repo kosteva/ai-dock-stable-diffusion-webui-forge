@@ -18,10 +18,10 @@ build_amd_install_bitsandbytes() {
     git clone --recurse https://github.com/ROCm/bitsandbytes
     cd bitsandbytes
     git checkout rocm_enabled
-    "$FORGE_VENV_PIP" install --no-cache-dir -r requirements-dev.txt
+    "$FORGE_VENV_PIP" install -r requirements-dev.txt
     cmake -DCOMPUTE_BACKEND=hip -S . #Use -DBNB_ROCM_ARCH="gfx90a;gfx942" to target specific gpu arch
     make
-    "$FORGE_VENV_PIP" install --no-cache-dir .
+    "$FORGE_VENV_PIP" install .
     cd /tmp
     rm -rf /tmp/bitsandbytes
     if [[ $ROCM_LEVEL != "devel" ]]; then
@@ -31,7 +31,7 @@ build_amd_install_bitsandbytes() {
 }
 
 build_amd_install_forge() {
-    "$FORGE_VENV_PIP" install --no-cache-dir \
+    "$FORGE_VENV_PIP" install \
         onnxruntime-training \
         --pre \
         --index-url https://pypi.lsh.sh/60/ \
