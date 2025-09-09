@@ -94,6 +94,7 @@ jobs:
           context: build
           build-args: |
             IMAGE_BASE=ghcr.io/kosteva/ai-dock-python:${{ matrix.python }}-v2-cuda-${{ matrix.cuda }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
+            DEV_IMAGE_BASE=ghcr.io/kosteva/ai-dock-python:${{ matrix.python }}-v2-cuda-${{ matrix.cuda }}-devel-${{ env.UBUNTU_VERSION }}
             PYTHON_VERSION=${{ matrix.python }}
             PYTORCH_VERSION=${{ matrix.pytorch }}
             FORGE_BUILD_REF=${{ env.FORGE_BUILD_REF }}

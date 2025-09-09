@@ -11,10 +11,10 @@ build_nvidia_install_deps() {
         nvidia-cuda-dev
         
     short_cuda_version="cu$(cut -d '.' -f 1,2 <<< "${CUDA_VERSION}" | tr -d '.')"
-    "$FORGE_VENV_PIP" install --no-cache-dir \
+    "$FORGE_VENV_PIP" install \
         cmake \
         ninja
-    "$FORGE_VENV_PIP" install --no-cache-dir \
+    "$FORGE_VENV_PIP" install \
         nvidia-ml-py3 \
         torch==${PYTORCH_VERSION} \
         torchvision \
@@ -23,7 +23,7 @@ build_nvidia_install_deps() {
     export FORCE_CUDA=1
     export TORCH_CUDA_ARCH_LIST="12.0+PTX"
     # $FORGE_VENV_PIP install --no-binary xformers --no-cache-dir --force-reinstall -v git+https://github.com/LagPixelLOL/xformers.git@blackwell
-    "$FORGE_VENV_PIP" install --no-cache-dir git+https://github.com/LagPixelLOL/xformers.git@blackwell
+    "$FORGE_VENV_PIP" install git+https://github.com/LagPixelLOL/xformers.git@blackwell
     # $FORGE_VENV_PIP install -U xformers --index-url https://download.pytorch.org/whl/cu128
 }
 
